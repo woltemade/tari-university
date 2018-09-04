@@ -19,7 +19,7 @@
 Sample image below, set at 450 pixels width
 
 @div[s450px]
-![My Sample Image](https://github.com/tari-labs/tari-university/raw/regulatory/regulatory/Directions-in-cryptocurrency/sources/sample.png)
+![My Sample Image](https://raw.githubusercontent.com/tari-labs/tari-university/regulatory/regulatory/Directions-in-cryptocurrency/sources/sample.PNG)
 @divend
 
 +++
@@ -31,7 +31,7 @@ Sample image below, set at 450 pixels width
 Sample side by side
 
 @div[left-50 s250px]
-![My Sample Image](https://github.com/tari-labs/tari-university/raw/regulatory/regulatory/Directions-in-cryptocurrency/sources/sample.png)
+![My Sample Image](https://raw.githubusercontent.com/tari-labs/tari-university/regulatory/regulatory/Directions-in-cryptocurrency/sources/sample.PNG)
 @divend
 
 @div[right-50]
