@@ -139,6 +139,10 @@
   text-align: right;
 }
 
+.reveal div.text-center {
+  text-align: center;
+}
+
 .reveal div.left-25 {
   float: left;
   z-index: -10;
