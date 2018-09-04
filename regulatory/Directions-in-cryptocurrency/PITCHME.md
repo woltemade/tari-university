@@ -30,17 +30,20 @@ Sample image below, set at 450 pixels width
 
 Sample side by side image and text
 
-@div[left-50 s250px]
+@div[left-50 s250px text-center]
 ![My Sample Image](https://raw.githubusercontent.com/tari-labs/tari-university/regulatory/regulatory/Directions-in-cryptocurrency/sources/sample.PNG)
 @divend
 
-@div[right-50 text-center]
+@div[right-50]
+
+@div[text-left]
 
 ???
 
 - ???
-
   - ???
+
+@divend
 
 @divend
 
