@@ -28,7 +28,7 @@ Sample image below, set at 450 pixels width
 
 ???
 
-Sample side by side image and text
+Sample side by side image and text. [HTML tags](https://html.com/tags/) must be used for lists and formatting inside the div containers.
 
 @div[left-50 s250px text-center]
 ![My Sample Image](https://raw.githubusercontent.com/tari-labs/tari-university/regulatory/regulatory/Directions-in-cryptocurrency/sources/sample.PNG)
@@ -38,10 +38,13 @@ Sample side by side image and text
 
 @div[text-left]
 
-???
+<p>[Unordered list](https://html.com/tags/ul/) of items below:
 
-- ???
-  - ???
+
+<ul>
+<li>???
+<li>???
+</ul>
 
 @divend
 
@@ -59,25 +62,28 @@ Sample side by side text
 
 @div[text-left]
 
-???
+<p>[Separate paragraph](https://html.com/tags/p/) ???
+<p>[Separate paragraph](https://html.com/tags/p/) ???
 
-???
 
 @divend
 
 @div[text-center]
 
-- ???
-
-  - ???
+<ul>
+<li>???
+<li>???
+</ul>
 
 @divend
 
 @div[text-right]
 
-- ???
+<ol>
+<li>[Ordered list item](https://html.com/tags/ol/) ???
+<li>???
+</ol>
 
-  - ???
 
 @divend
 
@@ -89,25 +95,27 @@ Sample side by side text
 
 @div[text-left]
 
-???
-
-???
+<p>???
+<p>???
 
 @divend
 
 @div[text-center]
 
-- ???
-
-  - ???
+<ul>
+<li>???
+<li>???
+</ul>
 
 @divend
 
 @div[text-right]
 
-- ???
+<ol>
+<li>???
+<li>???
+</ol>
 
-  - ???
 
 @divend
 
