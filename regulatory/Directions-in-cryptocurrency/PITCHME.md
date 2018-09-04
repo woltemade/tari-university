@@ -28,15 +28,13 @@ Sample image below, set at 450 pixels width
 
 ???
 
-Sample side by side image and text. [HTML tags](https://html.com/tags/) must be used for lists and formatting inside the div containers.
+Sample side by side image (set at 250 pixels width, aligned center) and text (aligned left) inside div containers. [HTML tags](https://html.com/tags/) must be used for lists and formatting here.
 
 @div[left-50 s250px text-center]
 ![My Sample Image](https://raw.githubusercontent.com/tari-labs/tari-university/regulatory/regulatory/Directions-in-cryptocurrency/sources/sample.PNG)
 @divend
 
-@div[right-50]
-
-@div[text-left]
+@div[right-50 text-left]
 
 <p>[Unordered list](https://html.com/tags/ul/) of items below:
 
@@ -45,25 +43,20 @@ Sample side by side image and text. [HTML tags](https://html.com/tags/) must be 
 <li>???
 <li>???
 </ul>
-
-@divend
-
 @divend
 
 ---
 
 ## Topic 2 ???
 
-???
-
-Sample side by side text
+Sample side by side text inside div containers, with alternating alignment.  [HTML tags](https://html.com/tags/) must be used for lists and formatting here.
 
 @div[left-50]
 
 @div[text-left]
 
-<p>[Separate paragraph](https://html.com/tags/p/) ???
-<p>[Separate paragraph](https://html.com/tags/p/) ???
+<p>[Paragraph left](https://html.com/tags/p/)
+<p>Paragraph left
 
 
 @divend
@@ -71,17 +64,18 @@ Sample side by side text
 @div[text-center]
 
 <ul>
-<li>???
-<li>???
+<li>[Unordered list center](https://html.com/tags/ul/)
+<li>Unordered list center
 </ul>
+
 
 @divend
 
 @div[text-right]
 
 <ol>
-<li>[Ordered list item](https://html.com/tags/ol/) ???
-<li>???
+<li>[Ordered list right](https://html.com/tags/ol/)
+<li>Ordered list right
 </ol>
 
 
@@ -95,25 +89,27 @@ Sample side by side text
 
 @div[text-left]
 
-<p>???
-<p>???
+<p>Paragraph left
+<p>Paragraph left
+
 
 @divend
 
 @div[text-center]
 
 <ul>
-<li>???
-<li>???
+<li>Unordered list center
+<li>Unordered list center
 </ul>
+
 
 @divend
 
 @div[text-right]
 
 <ol>
-<li>???
-<li>???
+<li>Ordered list right
+<li>Ordered list right
 </ol>
 
 
