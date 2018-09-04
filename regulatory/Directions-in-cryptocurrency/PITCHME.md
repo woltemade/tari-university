@@ -28,7 +28,7 @@ Sample image below, set at 450 pixels width
 
 ???
 
-Sample side by side
+Sample side by side image and bullets
 
 @div[left-50 s250px]
 ![My Sample Image](https://raw.githubusercontent.com/tari-labs/tari-university/regulatory/regulatory/Directions-in-cryptocurrency/sources/sample.PNG)
@@ -36,13 +36,15 @@ Sample side by side
 
 @div[right-50]
 
-- ???
-
-- ???
+<ul>
+<li> ???
+<li> ???
+<li> ???
+</ul>
 
 @divend
 
-------
+---
 
 ## Topic 2 ???
 
@@ -54,7 +56,7 @@ Sample side by side
 
 ???
 
-------
+---
 
 ## Topic 3 ???
 
@@ -66,7 +68,7 @@ Sample side by side
 
 ???
 
-------
+---
 
 ## Conclusions
 
