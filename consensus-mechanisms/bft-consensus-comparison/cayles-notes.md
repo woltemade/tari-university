@@ -212,14 +212,75 @@ It may be the case that it takes time before nodes in the protocol detect the fo
 ### Strongly seeing
 
 If a node examines its hash graph and notices that an event z _sees_ an event x, and not only that, but it can draw
-an ancestor relationship (usually via multiple routes) through a super-majority of peer nodes; then we say that according 
-to this node, that z _strongly sees_ x.
+an ancestor relationship (usually via multiple routes) through a super-majority of peer nodes, and that a different
+event from each node also sees x; then we say that according to this node, that z _strongly sees_ x.
+
+The following example comes from [[HGP]]:
+
+![Strongly seeing example](../assets/strongly-seeing.png)
 
 ## Consensus 
 
-The HashGraph algorithm goes through a number of virtual voting rounds.
+### Gossiping
 
-TODO: Elaborate
+The main consensus algorithm loop consists of every node (Alice), selecting a random peer node (Bob) and sharing their 
+graph history. Now Alice and Bob have the same graph history.
+
+Alice and Bob both create a new event with the new knowledge they've just learnt from their peer.
+
+Alice repeats this process continuously.
+
+### Internal consensus
+
+After a sync, a node will determine the order for as many events as possible, using three procedures.
+The algorithm uses constant _n_ (the number of nodes) and a small constant value _c_ > 2.  
+
+```
+in parallel:
+    loop
+      sync all known events to a random member
+    end loop
+
+    loop
+      receive a sync
+      create a new event
+      call divideRounds
+      call decideFame
+      call findOrder
+    end loop
+    
+    procedure divideRounds
+      for each event x
+        r ← max round of parents of x ( or 1 if none exist )
+        if x can strongly see more than 2/3*n round r witnesses
+          x.round ← r + 1
+        else
+          x.round ← r
+        x.witness ← ( x has no self parent ) || ( x.round > x.selfParent.round )
+        
+    procedure decideFame
+      for each event x in order from earlier rounds to later
+        x.famous ← UNDECIDED
+        for each event y in order from earlier rounds to later
+          if x.witness and y.witness and y.round > x.round
+            d ← y.round - x.round
+            s ← the set of witness events in round y.round-1 that y can strongly see
+            v ← majority vote in s ( is TRUE for a tie )
+            t ← number of events in s with a vote of v
+            if d = 1 // first round of the election
+              y.vote ← can y see x ?
+            else if d mod c > 0 // this is a normal round
+                if t > 2* n /3 // if supermajority, then decide
+                  x.famous ← v
+                  y.vote ← v
+                  break // y loop
+                else // else, just vote
+                  y.vote ← v
+            else if t > 2* n /3 // this is a coin round
+              y.vote ← v
+            else // else flip a coin
+              y.vote ← middle bit of y.signature
+```
 
 ## Drawbacks
 
