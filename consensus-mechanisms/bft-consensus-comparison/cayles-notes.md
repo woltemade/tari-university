@@ -1,3 +1,5 @@
+Scalable, Decentralised, Secure. Choose Two.
+
 # Consensus mechanism comparison
 
 Scope: We're looking at Byzantine Fault Tolerant consensus mechanisms.
@@ -60,7 +62,7 @@ may influence any messages sent within the same round [[WPC]].
 
 In a  _partially synchronous_ system, the system can alternate between good and bad periods of synchrony [[WPC]].
 
-Asynchronous systems make no assumptions about when or whether messages arrive at their destination. Interstingly,
+Asynchronous systems make no assumptions about when or whether messages arrive at their destination. Interestingly,
 it has been proven that in a fully asynchronous, deterministic system _there is no consensus solution that can guarantee consensus
 if even one node fails_ (the FLP theorem). This result does not state that consensus can never be reached: 
 merely that under the model's assumptions, no algorithm can _always_ reach consensus in bounded time. 
@@ -290,6 +292,97 @@ in parallel:
 * HashGraph is probably not "fair" as claimed in their paper, with at least one attack being proposed [[GRA18]]
 
 Baird tries to address some of these drawbacks in a follow-up paper [[BAI16]]
+
+# Algorand
+
+Released in May 2017 [[CHE17]], Algorand is a synchronous BFT consensus mechanism, meaning that blocks
+ get added at a minimum rate. It claims to work in a permissionless environment, but the synchrony aspect of the design
+ makes Algorand unsuitable for a high-throughput network like Tari.
+ 
+ Algorand does however, introduce the concept of a _concrete coin_. Most of these BFT algorithms need some sort of 
+ randomness oracle, but all nodes need to see the same value if the oracle is consulted. This had previously been
+ achieved through a _common coin_ idea, which is a complicated piece of mathematical 'magic'.
+ 
+ Concrete coin uses a much simpler approach; but only returns a binary value.
+
+# Thunderella
+
+Thunderella takes an interesting approach to reaching consensus. It uses an asynchronous strategy, with
+a synchronous strategy as a fall back  'in case something goes wrong' [[TWP]]. The idea is that you get the best of both
+worlds: robustness and speed.
+
+It can be applied in permissionless networks using proof-of-work. Netowrk robustness and "instant confirmations" requires
+ both 75% of the network to be honest, and the presence of a leader node.
+ 
+# HoneyBadgerBFT
+
+Honeybadger BFT styles itself as the first practical asynchronous BFT consensus algorithm. It was released in November 2016.
+It was designed with cryptocurrencies in mind, where bandwidth is considered scarce, but CPU power is abundant. Therefore
+HoneyBadgerBFT introduces the use of public-private key encryption to improve the efficiency of the consensus-reaching
+communication. 
+
+In its threshold encryption scheme, any one party can encrypt a message using a master public key, and it requires f+1 
+correct nodes to compute and reveal decryption shares for a ciphertext before the plaintext can be recovered.
+ 
+# PARSEC
+
+Parsec was developed by MaidSafe and the whitepaper was released on 20 June 2018 [[MSP]]. Parsec builds on the ideas
+of Hashgraph, HoneybadgerBFT and others and claims to have produced a consensus algorithm that
+
+* is asynchronous
+* has no leaders or round-robin mechanisms
+* reaches consensus with probability one.
+
+The reference implementation of PARSEC, written in Rust, was released a few weeks after the whitepaper [[PSC]].
+
+Similarly to HashGraph, Parsec reduces the problem to a _binary_ Byzantine problem and solves that through a set of
+voting rounds on a gossip graph.
+
+PARSEC is essentially Hashgraph with the added capability for higher churn of nodes and not patented. 
+
+When a node receives a gossip request, it 
+creates a new event and sends a response back (in HashGraph, the response was optional). Each gossip event contains [[FOC18]]:
+
+1. The data being transmitted
+1. The self-parent (the hash of another gossip event created by the same node)
+1. The other-parent (a hash of another gossip event created by a different node)
+1. The _Cause_ for creation which can either be a Request for information, a Response to another node’s request, or an 
+   _Observation_. An observation is when a node creates a gossip event to record an observation that the node made themselves.
+1. Creator ID (public key)
+1. Signature – signing the above information.
+
+The self-parent and other-parent prevents tampering because they are signed and related to other gossip events [[FOC18]].
+As with HashGraph, it's difficult for adversaries to interfere with the consensus algorithm because all voting is _virtual_
+and done without sharing details of votes cast; each node figures out what other nodes would have voted based on their
+copy of the gossip graph.
+
+PARSEC is relatively efficient, requiring O(n log n) messages and O(log N) stages to reach consensus [[MSP]].
+
+PARSEC also uses the concept of a "concrete coin", from Algorand that is used to break ties; particularly in cases where an adversary
+is carefully managing communication between nodes in order to maintain a deadlock on votes.
+
+## Voting Algorithm
+
+First nodes, try and converge on a 'true' result for a set of results. If they can't, they move onto step 2, which is
+trying to converge on a 'false' result. If consensus still cannot be reached, a coin flip is made and we go back to step 1
+in another voting round.
+
+## Drawbacks
+
+Similar to HashGraph. It's not clear that PARSEC will scale well as _n_ grows to millions of nodes, but at least PARSEC is
+open source and a reference implementation has already been released in Rust.
+
+# Avalanche
+
+Avalanche was released by an anonymous group called 'Team Rocket' in May 2018. [[FOC18b]]. IT is a synchronous protocol, but
+Team Rocket claim that the synchrony requirements are "good enough" for real-world applications.
+
+It's so early in this space that no-one has really critically compared Avalanche to say, PARSEC or any of the other new
+protocols presented here. A request for comment on the SAFE netowrk forum yielded the opinion (unsurprisingly) that [PARSEC
+was marginally better than Avalanche](https://safenetforum.org/t/let-s-compare-parsec-against-avalanche-the-self-claimed-revolutionary-consensus-breakthrough-since-bitcoin/23677/2).
+
+
+
 # References
 1. Consensus mechanisms. Wikipedia. [[WPC]]
 1. Attiya, Hagit (2004). Distributed Computing 2nd Ed. Wiley. pp. 101–103. [[ATT04]]
@@ -302,6 +395,12 @@ Baird tries to address some of these drawbacks in a follow-up paper [[BAI16]]
 1. Hashgraph: A Whitepaper Review, Michael Graczyk, https://medium.com/opentoken/hashgraph-a-whitepaper-review-f7dfe2b24647 [[GRA18]]
 1. Swirlds and Sybil Attacks, L. Baird, Jun 6, 2016, http://www.swirlds.com/downloads/Swirlds-and-Sybil-Attacks.pdf [[BAI16]]
 1. Demystifying Hashgraph: Benefits and Challenges, Yaoqi Jia, Nov 8, 2017. https://hackernoon.com/demystifying-hashgraph-benefits-and-challenges-d605e5c0cee5
+1. The Honey Badger of BFT Protocols, A. Miller _et. al._, https://eprint.iacr.org/2016/199.pdf [[HBP]]
+1. ALGORAND, J. Chen and S. Micali, https://arxiv.org/pdf/1607.01341.pdf [[CHE17]]
+1. Thunderella: Blockchains with Optimistic Instant Confirmation, R. Pass and E. Shi, 31 MArch 2018. https://eprint.iacr.org/2017/913.pdf
+1. PARSEC Source Code Repository. https://github.com/maidsafe/parsec [[PSC]]
+1. Project Spotlight: Maidsafe and PARSEC Part 2, FlatOutCrypto, 25 Jun 2018. https://flatoutcrypto.com/home/maidsafeparsecexplanationpt2 [[FOC18]]
+1. Protocol Spotlight: Avalanche Part 1, 29 Jun 2018. https://flatoutcrypto.com/home/avalancheprotocol [[FOC18b]]
 
 [WPC]: https://en.wikipedia.org/wiki/Consensus_(computer_science) 'Wikipedia - Consensus mechanisms'
 [WPP]: https://en.wikipedia.org/wiki/Paxos_(computer_science) 'Wikipedia - Paxos'
@@ -314,3 +413,9 @@ Baird tries to address some of these drawbacks in a follow-up paper [[BAI16]]
 [GRA18]: https://medium.com/opentoken/hashgraph-a-whitepaper-review-f7dfe2b24647 'Hashgraph: A Whitepaper Review'
 [BAI16]: http://www.swirlds.com/downloads/Swirlds-and-Sybil-Attacks.pdf 'Swirlds and Sybil Attacks'
 [HN1]: https://hackernoon.com/demystifying-hashgraph-benefits-and-challenges-d605e5c0cee5 'Demystifying HashGraph'
+[HBP]: https://eprint.iacr.org/2016/199.pdf 'HoneyBadgerBFT Whitepper'
+[CHE17]: https://arxiv.org/pdf/1607.01341.pdf 'Algorand whitepaper'
+[TWP]: https://eprint.iacr.org/2017/913.pdf ' Thunderella Whitepaper'
+[PSC]: https://github.com/maidsafe/parsec 'PARSEC Github repository'
+[FOC18]: https://flatoutcrypto.com/home/maidsafeparsecexplanationpt2 'Project Spotlight: Maidsafe and PARSEC Part 2 - FlatOutCrypto'
+[FOC18b]: https://flatoutcrypto.com/home/avalancheprotocol 'Project Spotlight: Avalanche Part 1 - FlatOutCrypto'
